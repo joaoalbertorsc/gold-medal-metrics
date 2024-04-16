@@ -2,18 +2,22 @@ package com.codecademy.goldmedal.repositories;
 
 import com.codecademy.goldmedal.model.GoldMedal;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface GoldMedalRepository extends JpaRepository<GoldMedal, Integer> {
-
-    List<GoldMedal> findBySeason(String summer);
-
-    //@Query("SELECT DISTINCT g FROM gold_medal g WHERE g.season = :season GROUP BY g.event")
-    List<GoldMedal> findDistinctBySeason(String season);
-
-    //@Query("SELECT DISTINCT g FROM gold_medal g WHERE g.gender = :gender GROUP BY g.event")
-    List<GoldMedal> findDistinctByGender(String gender);
+    int countByCountryAndGender(String countryName, String women);
+    int countBySeason(String winter);
+    int countByCountry(String countryName);
+    List<GoldMedal> getByCountryAndSeasonOrderByYearAsc(String countryName, String summer);
+    List<GoldMedal> getByCountryOrderByYearAsc(String countryName);
+    List<GoldMedal> getByCountryOrderByYearDesc(String countryName);
+    List<GoldMedal> getByCountryOrderBySeasonAsc(String countryName);
+    List<GoldMedal> getByCountryOrderBySeasonDesc(String countryName);
+    List<GoldMedal> getByCountryOrderByCityAsc(String countryName);
+    List<GoldMedal> getByCountryOrderByCityDesc(String countryName);
+    List<GoldMedal> getByCountryOrderByNameAsc(String countryName);
+    List<GoldMedal> getByCountryOrderByNameDesc(String countryName);
+    List<GoldMedal> getByCountryOrderByEventAsc(String countryName);
+    List<GoldMedal> getByCountryOrderByEventDesc(String countryName);
 }

@@ -1,7 +1,6 @@
 package com.codecademy.goldmedal.repositories;
 
 import com.codecademy.goldmedal.model.Country;
-import com.codecademy.goldmedal.model.CountrySummary;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
