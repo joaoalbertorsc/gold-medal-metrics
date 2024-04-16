@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class Country {
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
 
     private String name;
     private String code;
@@ -63,5 +63,9 @@ public class Country {
 
     public void setPopulation(Integer population) {
         this.population = population;
+    }
+
+    public Integer getId() {
+        return id;
     }
 }
