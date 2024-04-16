@@ -48,23 +48,33 @@ public class GoldMedalController {
         switch (sortBy) {
             case "year":
                 // TODO: list of medals sorted by year in the given order
-                medalsList = sortByMedalsYear(goldMedalRepository.findAll(), ascendingOrder);
+                medalsList = ascendingOrder ?
+                        goldMedalRepository.getByCountryOrderByYearAsc(countryName) :
+                        goldMedalRepository.getByCountryOrderByYearDesc(countryName);
                 break;
             case "season":
                 // TODO: list of medals sorted by season in the given order
-                medalsList = sortByMedalsSeason(goldMedalRepository.findAll(), ascendingOrder);
+                medalsList = ascendingOrder ?
+                        goldMedalRepository.getByCountryOrderBySeasonAsc(countryName) :
+                        goldMedalRepository.getByCountryOrderBySeasonDesc(countryName);
                 break;
             case "city":
                 // TODO: list of medals sorted by city in the given order
-                medalsList = sortByMedalsCity(goldMedalRepository.findAll(), ascendingOrder);
+                medalsList = ascendingOrder ?
+                        goldMedalRepository.getByCountryOrderByCityAsc(countryName) :
+                        goldMedalRepository.getByCountryOrderByCityDesc(countryName);
                 break;
             case "name":
                 // TODO: list of medals sorted by athlete's name in the given order
-                medalsList = sortByMedalsAthletesName(goldMedalRepository.findAll(), ascendingOrder);
+                medalsList = ascendingOrder ?
+                        goldMedalRepository.getByCountryOrderByNameAsc(countryName) :
+                        goldMedalRepository.getByCountryOrderByNameDesc(countryName);
                 break;
             case "event":
                 // TODO: list of medals sorted by event in the given order
-                medalsList = sortByMedalsEvent(goldMedalRepository.findAll(), ascendingOrder);
+                medalsList = ascendingOrder ?
+                        goldMedalRepository.getByCountryOrderByEventAsc(countryName) :
+                        goldMedalRepository.getByCountryOrderByEventDesc(countryName);
                 break;
             default:
                 medalsList = new ArrayList<>();
@@ -82,28 +92,28 @@ public class GoldMedalController {
         }
 
         var country = countryOptional.get();
-        var goldMedalCount = goldMedalRepository.findAll().size();// TODO: get the medal count
+        var goldMedalCount = goldMedalRepository.countByCountry(countryName);// TODO: get the medal count
 
         // TODO: get the collection of wins at the Summer Olympics, sorted by year in ascending order
-        var summerWins = sortByYearAscendingOrder(goldMedalRepository.findBySeason("Summer"), true);
+        var summerWins = goldMedalRepository.getByCountryAndSeasonOrderByYearAsc(countryName, "Summer");
         var numberSummerWins = !summerWins.isEmpty() ? summerWins.size() : null;
         // TODO: get the total number of events at the Summer Olympics
-        var totalSummerEvents = goldMedalRepository.findDistinctBySeason("Summer").size();
+        var totalSummerEvents = goldMedalRepository.countBySeason("Summer");
         var percentageTotalSummerWins = totalSummerEvents != 0 && numberSummerWins != null ? (float) summerWins.size() / totalSummerEvents : null;
         var yearFirstSummerWin = !summerWins.isEmpty() ? summerWins.get(0).getYear() : null;
 
         // TODO: get the collection of wins at the Winter Olympics, sorted by year in ascending order
-        var winterWins = sortByYearAscendingOrder(goldMedalRepository.findBySeason("Winter"), true);
+        var winterWins = goldMedalRepository.getByCountryAndSeasonOrderByYearAsc(countryName, "Winter");
         var numberWinterWins = !winterWins.isEmpty() ? winterWins.size() : null;
         // TODO: get the total number of events at the Winter Olympics
-        var totalWinterEvents = goldMedalRepository.findDistinctBySeason("Winter").size();
+        var totalWinterEvents = goldMedalRepository.countBySeason("Winter");
         var percentageTotalWinterWins = totalWinterEvents != 0 && numberWinterWins != null ? (float) winterWins.size() / totalWinterEvents : null;
         var yearFirstWinterWin = !winterWins.isEmpty() ? winterWins.get(0).getYear() : null;
 
         // TODO: get the number of wins by female athletes
-        var numberEventsWonByFemaleAthletes = goldMedalRepository.findDistinctByGender("Women").size();
+        var numberEventsWonByFemaleAthletes = goldMedalRepository.countByCountryAndGender(countryName, "Women");
         // TODO: get the number of wins by male athletes
-        var numberEventsWonByMaleAthletes = goldMedalRepository.findDistinctByGender("Men").size();
+        var numberEventsWonByMaleAthletes = goldMedalRepository.countByCountryAndGender(countryName, "Men");
 
         return new CountryDetailsResponse(
                 countryName,
@@ -172,47 +182,5 @@ public class GoldMedalController {
             countrySummaries.add(new CountrySummary(country, goldMedalCount));
         }
         return countrySummaries;
-    }
-    private List<GoldMedal> sortByYearAscendingOrder(List<GoldMedal> goldMedals, boolean ascendingOrder){
-        return goldMedals.stream()
-                .sorted((t1, t2) -> ascendingOrder ?
-                        t1.getYear() - t2.getYear() :
-                        t2.getYear() - t1.getYear())
-                .collect(Collectors.toList());
-    }
-    private List<GoldMedal> sortByMedalsYear(List<GoldMedal> medals, boolean ascendingOrder) {
-        return medals.stream()
-                    .sorted(ascendingOrder ?
-                            Comparator.comparing(GoldMedal::getYear) :
-                            Comparator.comparing(GoldMedal::getYear).reversed())
-                    .collect(Collectors.toList());
-    }
-    private List<GoldMedal> sortByMedalsSeason(List<GoldMedal> medals, boolean ascendingOrder) {
-        return medals.stream()
-                .sorted(ascendingOrder ?
-                        Comparator.comparing(GoldMedal::getSeason) :
-                        Comparator.comparing(GoldMedal::getSeason).reversed())
-                .collect(Collectors.toList());
-    }
-    private List<GoldMedal> sortByMedalsCity(List<GoldMedal> medals, boolean ascendingOrder) {
-        return medals.stream()
-                .sorted(ascendingOrder ?
-                        Comparator.comparing(GoldMedal::getCity) :
-                        Comparator.comparing(GoldMedal::getCity).reversed())
-                .collect(Collectors.toList());
-    }
-    private List<GoldMedal> sortByMedalsAthletesName(List<GoldMedal> medals, boolean ascendingOrder) {
-        return medals.stream()
-                .sorted(ascendingOrder ?
-                        Comparator.comparing(GoldMedal::getName) :
-                        Comparator.comparing(GoldMedal::getName).reversed())
-                .collect(Collectors.toList());
-    }
-    private List<GoldMedal> sortByMedalsEvent(List<GoldMedal> medals, boolean ascendingOrder) {
-        return medals.stream()
-                .sorted(ascendingOrder ?
-                        Comparator.comparing(GoldMedal::getEvent) :
-                        Comparator.comparing(GoldMedal::getEvent).reversed())
-                .collect(Collectors.toList());
     }
 }
