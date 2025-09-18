@@ -1,2 +1,35 @@
 # Project exclude paths
 /target/
+
+# IDE-specific files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Build artifacts
+*.jar
+*.war
+*.class
+
+# Log files
+*.log
+logs/
+
+# Maven specific
+pom.xml.tag
+pom.xml.bak
+pom.xml.versionsBackup
+dependency-reduced-pom.xml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# JVM crash logs
+hs_err_pid*.log
+
+# Spring Boot devtools
+.spring-boot-devtools.properties
+.flattened-pom.xml

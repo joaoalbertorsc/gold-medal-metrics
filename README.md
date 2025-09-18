@@ -1,35 +1,75 @@
-# Gold Medal Metrics Challenge Project
+# Gold Medal Metrics - Full-Stack Application
 
-### Overview
-In this project, you will use Spring Data JPA to power an Olympics analytics web app.
+A full-stack web application to browse and analyze Olympic Gold Medal data, built with a Spring Boot back-end and a JavaScript front-end.
 
-### Testing
-You can use cURL to manually test your API endpoints.
+## How to Use
 
-Here are some example cURL requests and responses.
+This project is designed to be run as a complete application. The primary way to interact with the data is through the web interface provided.
 
-#### Get countries, sorted by name in ascending order 
+1.  **Prerequisites:**
+    - Java 11 or higher
+    - Apache Maven
 
-```shell
-curl --request GET "http://localhost:3001/countries?sort_by=name&ascending=y"                                   
+2.  **Run the Application:**
+    - Open a terminal in the project's root directory.
+    - Start the application using the Maven wrapper:
+      ```shell
+      ./mvnw spring-boot:run
+      ```
 
-{"countries":[{"name":"Afghanistan","code":"AFG","gdp":594.32,"population":32526562,"medals":0},...]}
-```
+3.  **Access the Web Interface:**
+    - Once the application has started, open your favorite web browser.
+    - Navigate to the following URL:
+      [http://localhost:8080](http://localhost:8080)
 
-#### Get the details for the United States Olympic team
+    You can now use the web page to sort, filter, and view all the Olympic data.
 
-```shell
-curl --request GET "http://localhost:3001/countries/united%20states"                                            
+## Technologies Used
 
-{"name":"United States","gdp":"56115.72","population":"321418820","numberMedals":"2477","numberSummerWins":"2302","percentageTotalSummerWins":"21.957268","yearFirstSummerWin":"1896","numberWinterWins":"175","percentageTotalWinterWins":"9.1098385","yearFirstWinterWin":"1924","numberEventsWonByFemaleAthletes":"747","numberEventsWonByMaleAthletes":"1730"}
+- **Java**: Primary language for the backend.
+- **Spring Boot**: Framework for building the RESTful API.
+- **Spring Data JPA**: For data access and persistence.
+- **H2 Database**: In-memory database for data storage.
+- **Maven**: Build automation and dependency management.
+- **RESTful API**: Backend architectural style.
+- **JavaScript**: Language for the frontend.
+- **HTML/CSS**: Frontend structure and styling.
+- **Full-Stack Application**: Project scope covering both client and server.
+- **Olympic Data Analysis**: The application's domain.
 
-```
+## Data Source
 
-#### Get the list of Gold medal winners for the United States Olympic team, sorted by the athlete's name in descending order
+The application uses an in-memory H2 database that is populated on startup from the `data.sql` script located in `src/main/resources/`. This script contains all the necessary medal and country information.
 
-```shell
-curl --request GET "http://localhost:3001/countries/united%20states/medals?sort_by=name&ascending=n"            
+---
 
-{"medals":[{"year":1968,"city":"Mexico","season":"Summer","name":"ZORN, Zachary","country":"United States","gender":"Men","sport":"Aquatics","discipline":"Swimming","event":"4X100M Freestyle Relay"},...]}
-```
+## For Developers: API Endpoints
 
+The front-end is powered by a REST API. If you wish to interact with the API directly for testing or development purposes, you can use a tool like `cURL` or Postman. The endpoints are described below.
+
+#### 1. Get All Countries
+
+- **URL:** `/countries`
+- **Method:** `GET`
+- **Example (cURL):** Get countries sorted by medal count in descending order.
+  ```shell
+  curl --request GET "http://localhost:8080/countries?sort_by=medals&ascending=n"
+  ```
+
+#### 2. Get Country Details
+
+- **URL:** `/countries/{countryName}`
+- **Method:** `GET`
+- **Example (cURL):** Get the details for the "United States" Olympic team.
+  ```shell
+  curl --request GET "http://localhost:8080/countries/united%20states"
+  ```
+
+#### 3. Get Medals for a Country
+
+- **URL:** `/countries/{countryName}/medals`
+- **Method:** `GET`
+- **Example (cURL):** Get all medals for "China", sorted by year in ascending order.
+  ```shell
+  curl --request GET "http://localhost:8080/countries/china/medals?sort_by=year&ascending=y"
+  ```
